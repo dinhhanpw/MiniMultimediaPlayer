@@ -1,0 +1,16 @@
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\bin\Debug\MultimediaPlayer.exe.config
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\bin\Debug\MultimediaPlayer.exe
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\bin\Debug\MultimediaPlayer.pdb
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.csprojAssemblyReference.cache
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MainWindow.g.cs
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\App.g.cs
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer_MarkupCompile.cache
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer_MarkupCompile.lref
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MainWindow.baml
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.g.resources
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.Properties.Resources.resources
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.csproj.GenerateResource.cache
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.exe
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.pdb
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\bin\Debug\Gma.System.MouseKeyHook.dll
+D:\documentfile\WPF\MultimediaPlayer\MultimediaPlayer\obj\Debug\MultimediaPlayer.csproj.CopyComplete

@@ -1,0 +1,304 @@
+﻿<Window x:Class="MultimediaPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultimediaPlayer"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded" Closing="Window_Closing"  Icon="Icons/ic_appMusic.png"
+        ResizeMode="CanMinimize"
+        Title="Mini Media Player" Height="400" Width="400">
+
+    <Window.Resources>
+
+        <Style x:Key="remainRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Height" Value="5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Height" Value="8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="runningRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Height" Value="5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Height" Value="8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="thumbSlider" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="10" Width="10" Fill="CornflowerBlue">
+                        </Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Track Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource runningRepeatButton}"
+                                      Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource thumbSlider}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource remainRepeatButton}"
+                                      Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="postionSongSlider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsMoveToPointEnabled" Value="True"/>
+            <Setter Property="Template" Value="{StaticResource Slider}" />
+        </Style>
+
+        <Style TargetType="ListBoxItem" x:Key="itemContainerStyle">
+            <Setter Property="BorderThickness" Value="5 0 0 0"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                    <Setter Property="Background"  Value="LightBlue"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+
+
+        </Grid.RowDefinitions>
+
+        <DockPanel>
+
+            <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Height="40" Width="40" RenderTransformOrigin="0.5,0.5"
+                   Source="Icons/ic_disc.png">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Image.RenderTransform>
+                
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Playing, 
+                                RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard Name="rotateDiscStoryBoard">
+                                        <Storyboard  RepeatBehavior="Forever">
+                                            <DoubleAnimation Duration="0:0:3" From="0" To="360"
+                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="rotateDiscStoryBoard"/>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+
+            <Label Margin="0 5 5 5" BorderThickness="2" BorderBrush="LightBlue" 
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                   Background="CornflowerBlue" Foreground="FloralWhite"  FontWeight="Bold"
+                   DataContext="{Binding ElementName=listSongListBox, Path=SelectedItem}" Content="{Binding Name}"/>
+        </DockPanel>
+
+        <ListBox Grid.Row="1" x:Name="listSongListBox" Margin="10"  ItemContainerStyle="{StaticResource itemContainerStyle}"  >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel LastChildFill="False">
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Width="250"/>
+                        <Button x:Name="removeSongButton" Margin="5" Width="30" Height="30" 
+                                DockPanel.Dock="Right"
+                                Background="White"
+                                BorderThickness="0"
+                                Click="removeSongButton_Click">
+                            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="Icons/ic_remove.png">
+                            </Image>
+                        </Button>
+                        <Button Name="playSongButton" 
+                                Width="30" Height="30"
+                                Background="White"
+                                BorderThickness="0"
+                                Click="playSong_Click">
+                            <Image RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="Icons/ic_playitem.png"/>
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding Path=IsSelected,
+                                                RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                         Value="True"/>
+                                                    <Condition Binding="{Binding Playing,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <MultiDataTrigger.Setters>
+                                                    <Setter Property="Source" Value="Icons/ic_pauseitem.png"/>
+                                                </MultiDataTrigger.Setters>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <DockPanel Grid.Row="2">
+            <TextBlock Margin="5" Name="currentPositionTextBlock" 
+                       VerticalAlignment="Center" DockPanel.Dock="Left" Text="00:00"/>
+            <TextBlock Margin="5" Name="durationSongTextBlock" 
+                       DockPanel.Dock="Right" VerticalAlignment="Center" Text="00:00"/>
+            <Slider Name="songSlider" Grid.Row="2" VerticalAlignment="Center"
+                    Style="{StaticResource postionSongSlider}" IsMoveToPointEnabled="True"
+                    IsSnapToTickEnabled="True"
+                TickFrequency="1" ValueChanged="songSlider_ValueChanged" />
+
+        </DockPanel>
+
+        <Grid Grid.Row="3" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="addSong" Margin="5" Width="40" Height="40" HorizontalAlignment="Left"
+                    Click="addButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="White"/>
+                    </Style>
+                </Button.Style>
+                <Image Source="Icons/ic_add.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Button>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button x:Name="previouButton" Margin="5" Width="40" Height="40"
+                        Click="previouButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="White"/>
+                        </Style>
+                    </Button.Style>
+                    <Image Source="Icons/ic_pre.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Button>
+
+                <Button x:Name="playButton" Margin="5" Width="50" Height="50" BorderThickness="0"
+                        Background="White" Click="playButton_Click">
+                    <Image RenderOptions.BitmapScalingMode="HighQuality">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Icons/ic_play.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Playing,
+                                    RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                        <Setter Property="Source" Value="Icons/ic_pause.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+
+                </Button>
+                <Button x:Name="nextButton" Margin="5" Width="40" Height="40" Click="playNextButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="White"/>
+                        </Style>
+                    </Button.Style>
+                    <Image Source="Icons/ic_next.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="playAgainButton" Margin="5" Width="40" Height="40"  
+                    Click="playAgainButton_Click" DockPanel.Dock="Right">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="LightSkyBlue"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AgainMode,
+                                RelativeSource={ RelativeSource AncestorType=Window}}" Value="0">
+                                    <Setter Property="Background" Value="LightGray"/>
+                                    <Setter Property="Opacity" Value="0.75"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+
+                    </Button.Style>
+                    <Image RenderOptions.BitmapScalingMode="HighQuality">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Icons/ic_playlistagain.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AgainMode,
+                                    RelativeSource={ RelativeSource AncestorType=Window}}" Value="2">
+                                        <Setter Property="Source" Value="Icons/ic_playagain.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Button>
+                <Button x:Name="playRandomButton" Margin="5" Width="40" Height="40"  
+                    Click="playRandomButton_Click" >
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Opacity" Value="0.75"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RandomMode, 
+                                RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Image Source="Icons/ic_random.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
